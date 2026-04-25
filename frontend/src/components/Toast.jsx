@@ -32,16 +32,16 @@ export function ToastProvider({ children }) {
 
 function ToastItem({ toast, onDismiss }) {
   const styles = {
-    success: { bg: 'bg-green-50 border-green-200', icon: <CheckCircle className="w-4 h-4 text-green-600" />, text: 'text-green-800' },
-    error:   { bg: 'bg-red-50 border-red-200',   icon: <XCircle className="w-4 h-4 text-red-600" />,     text: 'text-red-800'   },
-    info:    { bg: 'bg-blue-50 border-blue-200',  icon: <AlertCircle className="w-4 h-4 text-blue-600" />, text: 'text-blue-800'  },
+    success: { bg: 'bg-emerald-500/10 border-emerald-500/30', icon: <CheckCircle className="w-4 h-4 text-emerald-400" />, text: 'text-emerald-300' },
+    error:   { bg: 'bg-rose-500/10 border-rose-500/30',       icon: <XCircle className="w-4 h-4 text-rose-400" />,       text: 'text-rose-300'    },
+    info:    { bg: 'bg-cyan-500/10 border-cyan-500/30',        icon: <AlertCircle className="w-4 h-4 text-cyan-400" />,   text: 'text-cyan-300'    },
   };
   const s = styles[toast.type] || styles.success;
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 rounded-lg border shadow-md text-sm min-w-[280px] max-w-sm ${s.bg}`}>
+    <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl text-sm min-w-[280px] max-w-sm backdrop-blur-sm animate-slide-in-right ${s.bg}`}>
       {s.icon}
       <span className={`flex-1 font-medium ${s.text}`}>{toast.message}</span>
-      <button onClick={() => onDismiss(toast.id)} className="text-gray-400 hover:text-gray-600">
+      <button onClick={() => onDismiss(toast.id)} className="text-slate-500 hover:text-slate-300 transition-colors">
         <X className="w-3.5 h-3.5" />
       </button>
     </div>

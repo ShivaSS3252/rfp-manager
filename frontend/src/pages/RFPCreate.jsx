@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Wand2 } from 'lucide-react';
 import axios from 'axios';
 import PageHeader from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -16,10 +16,7 @@ export default function RFPCreate() {
   const navigate = useNavigate();
 
   async function handleGenerate() {
-    if (!rawInput.trim()) {
-      setError('Please describe what you want to procure.');
-      return;
-    }
+    if (!rawInput.trim()) { setError('Please describe what you want to procure.'); return; }
     setLoading(true);
     setError('');
     setParsed(null);
@@ -44,36 +41,59 @@ export default function RFPCreate() {
         title="Create New RFP"
         subtitle="Describe your procurement need and let AI structure it"
       />
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+
+      <div className="relative bg-slate-900/80 border border-slate-800/60 rounded-2xl p-6 overflow-hidden animate-fade-in-up">
+        {/* background glow */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-violet-600/5 rounded-full blur-3xl -translate-y-12 translate-x-12 pointer-events-none" />
+
+        <label className="block text-sm font-semibold text-slate-300 mb-2">
           What do you want to procure?
         </label>
+        <p className="text-xs text-slate-300 mb-3">Be as specific as possible — quantity, specs, budget, timeline, terms</p>
         <textarea
           rows={6}
           value={rawInput}
           onChange={e => setRawInput(e.target.value)}
-          placeholder="e.g. We need 20 laptops with 16GB RAM, 512GB SSD, for a software development team. Budget around $30,000. Delivery within 4 weeks..."
-          className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="e.g. We need 20 laptops with 16GB RAM, 512GB SSD for a software dev team. Budget $30,000. Delivery within 4 weeks. Net 30 payment. 1 year warranty..."
+          className="w-full bg-slate-800/60 border border-slate-700/60 rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 resize-none focus:outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
+          onKeyDown={e => { if (e.key === 'Enter' && e.metaKey) handleGenerate(); }}
         />
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-        <div className="mt-4 flex justify-end">
+
+        {error && (
+          <div className="mt-3 flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 rounded-xl px-3 py-2.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+            <p className="text-sm text-rose-400">{error}</p>
+          </div>
+        )}
+
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-xs text-slate-400">Tip: Press ⌘+Enter to generate</p>
           <button
             onClick={handleGenerate}
             disabled={loading}
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:from-violet-500 hover:to-violet-400 transition-all duration-200 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0 disabled:cursor-not-allowed"
           >
-            {loading ? (
-              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <Sparkles className="w-4 h-4" />
-            )}
-            {loading ? 'Generating...' : 'Generate RFP'}
+            {loading
+              ? <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              : <Sparkles className="w-4 h-4" />
+            }
+            {loading ? 'Generating with AI…' : 'Generate RFP'}
           </button>
         </div>
       </div>
 
-      {parsed && (
-        <div className="mt-6">
+      {loading && (
+        <div className="mt-6 animate-fade-in">
+          <LoadingSpinner size="lg" label="AI is structuring your RFP…" />
+        </div>
+      )}
+
+      {parsed && !loading && (
+        <div className="mt-6 animate-fade-in-up">
+          <div className="flex items-center gap-2 mb-3">
+            <Wand2 className="w-4 h-4 text-violet-400" />
+            <p className="text-sm font-semibold text-violet-300">AI-Generated — Review &amp; Edit Before Saving</p>
+          </div>
           <RFPPreviewCard data={parsed} onSave={handleSave} />
         </div>
       )}

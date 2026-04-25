@@ -32,7 +32,7 @@ export default function VendorList() {
         action={
           <button
             onClick={() => setShowForm(v => !v)}
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:from-violet-500 hover:to-violet-400 transition-all duration-200 shadow-lg shadow-violet-500/25 hover:-translate-y-0.5"
           >
             <Plus className="w-4 h-4" />
             Add Vendor
@@ -49,9 +49,9 @@ export default function VendorList() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-slate-900/80 border border-slate-800/60 rounded-2xl overflow-hidden">
         {loading ? (
-          <LoadingSpinner />
+          <LoadingSpinner label="Loading vendors…" />
         ) : vendors.length === 0 ? (
           <EmptyState
             icon={Users}
@@ -60,7 +60,7 @@ export default function VendorList() {
             action={
               <button
                 onClick={() => setShowForm(true)}
-                className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:from-violet-500 hover:to-violet-400 transition-all duration-200 shadow-lg shadow-violet-500/25 hover:-translate-y-0.5"
               >
                 <Plus className="w-4 h-4" />
                 Add Vendor
@@ -68,7 +68,7 @@ export default function VendorList() {
             }
           />
         ) : (
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-slate-800/40">
             {vendors.map(v => <VendorCard key={v._id} vendor={v} />)}
           </div>
         )}

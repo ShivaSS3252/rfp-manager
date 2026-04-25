@@ -40,14 +40,17 @@ export default function VendorForm({ vendor, onSaved, onCancel }) {
     }
   }
 
+  const inputCls = 'w-full bg-slate-800/60 border border-slate-700/60 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200';
+  const labelCls = 'block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5';
+
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-800">
+    <div className="bg-slate-900/80 border border-slate-800/60 rounded-2xl p-6 animate-fade-in-up">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-sm font-semibold text-slate-200">
           {vendor ? 'Edit Vendor' : 'Add New Vendor'}
         </h3>
         {onCancel && (
-          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onCancel} className="text-slate-300 hover:text-slate-300 transition-colors">
             <X className="w-4 h-4" />
           </button>
         )}
@@ -55,70 +58,44 @@ export default function VendorForm({ vendor, onSaved, onCancel }) {
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Company Name *</label>
-          <input
-            required
-            value={form.name}
-            onChange={e => set('name', e.target.value)}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label className={labelCls}>Company Name *</label>
+          <input required value={form.name} onChange={e => set('name', e.target.value)} className={inputCls} />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Email *</label>
-          <input
-            required
-            type="email"
-            value={form.email}
-            onChange={e => set('email', e.target.value)}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label className={labelCls}>Email *</label>
+          <input required type="email" value={form.email} onChange={e => set('email', e.target.value)} className={inputCls} />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Contact Person</label>
-          <input
-            value={form.contactPerson}
-            onChange={e => set('contactPerson', e.target.value)}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label className={labelCls}>Contact Person</label>
+          <input value={form.contactPerson} onChange={e => set('contactPerson', e.target.value)} className={inputCls} />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Phone</label>
-          <input
-            value={form.phone}
-            onChange={e => set('phone', e.target.value)}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label className={labelCls}>Phone</label>
+          <input value={form.phone} onChange={e => set('phone', e.target.value)} className={inputCls} />
         </div>
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-gray-500 mb-1">
-            Categories <span className="font-normal text-gray-400">(comma-separated)</span>
-          </label>
-          <input
-            value={form.category}
-            onChange={e => set('category', e.target.value)}
-            placeholder="e.g. electronics, laptops, networking"
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label className={labelCls}>Categories <span className="font-normal text-slate-300 lowercase normal-case tracking-normal">(comma-separated)</span></label>
+          <input value={form.category} onChange={e => set('category', e.target.value)} placeholder="e.g. electronics, laptops, networking" className={inputCls} />
         </div>
 
-        {error && <p className="col-span-2 text-sm text-red-600">{error}</p>}
+        {error && (
+          <div className="col-span-2 bg-rose-500/10 border border-rose-500/20 rounded-xl px-3 py-2">
+            <p className="text-sm text-rose-400">{error}</p>
+          </div>
+        )}
 
-        <div className="col-span-2 flex justify-end gap-2">
+        <div className="col-span-2 flex justify-end gap-2 pt-1">
           {onCancel && (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-200 rounded-lg"
-            >
+            <button type="button" onClick={onCancel} className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200 border border-slate-700 hover:border-slate-500 rounded-xl transition-all">
               Cancel
             </button>
           )}
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:from-violet-500 hover:to-violet-400 transition-all shadow-lg shadow-violet-500/25 disabled:opacity-50"
           >
-            {saving && <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+            {saving && <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />}
             {vendor ? 'Save Changes' : 'Add Vendor'}
           </button>
         </div>

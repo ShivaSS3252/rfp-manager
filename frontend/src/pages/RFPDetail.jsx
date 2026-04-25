@@ -33,8 +33,12 @@ export default function RFPDetail() {
     fetchAll().finally(() => setLoading(false));
   }, [fetchAll]);
 
-  if (loading) return <LoadingSpinner size="lg" />;
-  if (error) return <div className="p-8 text-red-600">{error}</div>;
+  if (loading) return <LoadingSpinner size="lg" label="Loading RFP…" />;
+  if (error) return (
+    <div className="p-8">
+      <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl px-5 py-4 text-rose-400 text-sm">{error}</div>
+    </div>
+  );
   if (!rfp) return null;
 
   const parsedProposals = proposals.filter(p => p.status === 'parsed' || p.status === 'reviewed');
@@ -42,24 +46,28 @@ export default function RFPDetail() {
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
-      <Link to="/rfps" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors">
-        <ArrowLeft className="w-4 h-4" />
+      <Link
+        to="/rfps"
+        className="inline-flex items-center gap-1.5 text-sm text-slate-300 hover:text-slate-200 mb-6 transition-colors group"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
         Back to RFPs
       </Link>
 
-      <div className="flex items-start justify-between mb-6">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6 animate-fade-in-up">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{rfp.title}</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">{rfp.title}</h1>
           <div className="flex items-center gap-3 mt-2">
             <StatusBadge status={rfp.status} />
-            <span className="text-sm text-gray-500">Created {new Date(rfp.createdAt).toLocaleDateString()}</span>
+            <span className="text-xs text-slate-300">Created {new Date(rfp.createdAt).toLocaleDateString()}</span>
           </div>
         </div>
         <div className="flex gap-2 mt-1">
           {rfp.status === 'draft' && (
             <button
               onClick={() => setShowSendPanel(v => !v)}
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:from-violet-500 hover:to-violet-400 transition-all duration-200 shadow-lg shadow-violet-500/25 hover:-translate-y-0.5"
             >
               <Send className="w-4 h-4" />
               Send to Vendors
@@ -68,7 +76,7 @@ export default function RFPDetail() {
           {parsedProposals.length >= 2 && (
             <Link
               to={`/rfps/${id}/compare`}
-              className="inline-flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-cyan-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:from-cyan-500 hover:to-cyan-400 transition-all duration-200 shadow-lg shadow-cyan-500/25 hover:-translate-y-0.5"
             >
               <BarChart3 className="w-4 h-4" />
               Compare Proposals
@@ -77,44 +85,35 @@ export default function RFPDetail() {
         </div>
       </div>
 
-      {/* Requirements */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 mb-6">
-        <h2 className="text-sm font-semibold text-gray-800 mb-4">Requirements</h2>
+      {/* Requirements card */}
+      <div className="bg-slate-900/80 border border-slate-800/60 rounded-2xl p-6 mb-6 animate-fade-in-up">
+        <h2 className="text-xs font-semibold text-slate-300 uppercase tracking-widest mb-5">Requirements</h2>
+
         <div className="grid grid-cols-3 gap-4 mb-5">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-50 p-2 rounded-lg"><DollarSign className="w-4 h-4 text-blue-600" /></div>
-            <div>
-              <p className="text-xs text-gray-500">Budget</p>
-              <p className="text-sm font-medium text-gray-900">
-                {rfp.requirements?.budget ? `$${rfp.requirements.budget.toLocaleString()}` : '—'}
-              </p>
+          {[
+            { icon: DollarSign, label: 'Budget',        color: 'from-violet-600/20 to-violet-800/20', iconColor: 'text-violet-400', val: rfp.requirements?.budget ? `$${rfp.requirements.budget.toLocaleString()}` : '—' },
+            { icon: Calendar,   label: 'Deadline',      color: 'from-cyan-600/20 to-cyan-800/20',     iconColor: 'text-cyan-400',   val: rfp.requirements?.deadline ? new Date(rfp.requirements.deadline).toLocaleDateString() : '—' },
+            { icon: Package,    label: 'Payment Terms', color: 'from-purple-600/20 to-purple-800/20', iconColor: 'text-purple-400', val: rfp.requirements?.paymentTerms || '—' },
+          ].map(({ icon: Icon, label, color, iconColor, val }) => (
+            <div key={label} className="flex items-center gap-3">
+              <div className={`bg-gradient-to-br ${color} border border-slate-700/40 p-2.5 rounded-xl`}>
+                <Icon className={`w-4 h-4 ${iconColor}`} />
+              </div>
+              <div>
+                <p className="text-xs text-slate-300">{label}</p>
+                <p className="text-sm font-semibold text-slate-200">{val}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-green-50 p-2 rounded-lg"><Calendar className="w-4 h-4 text-green-600" /></div>
-            <div>
-              <p className="text-xs text-gray-500">Deadline</p>
-              <p className="text-sm font-medium text-gray-900">
-                {rfp.requirements?.deadline ? new Date(rfp.requirements.deadline).toLocaleDateString() : '—'}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-50 p-2 rounded-lg"><Package className="w-4 h-4 text-purple-600" /></div>
-            <div>
-              <p className="text-xs text-gray-500">Payment Terms</p>
-              <p className="text-sm font-medium text-gray-900">{rfp.requirements?.paymentTerms || '—'}</p>
-            </div>
-          </div>
+          ))}
         </div>
 
         {rfp.requirements?.items?.length > 0 && (
           <div className="mb-3">
-            <p className="text-xs font-medium text-gray-500 mb-2">Items Required</p>
-            <ul className="space-y-1">
+            <p className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Items Required</p>
+            <ul className="space-y-1.5">
               {rfp.requirements.items.map((item, i) => (
-                <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
-                  <span className="text-blue-400 mt-0.5">•</span>{item}
+                <li key={i} className="text-sm text-slate-300 flex items-start gap-2">
+                  <span className="text-violet-500 mt-1 shrink-0">▸</span>{item}
                 </li>
               ))}
             </ul>
@@ -122,13 +121,13 @@ export default function RFPDetail() {
         )}
 
         {rfp.requirements?.warranty && (
-          <p className="text-sm text-gray-600 mt-2">
-            <span className="font-medium">Warranty:</span> {rfp.requirements.warranty}
+          <p className="text-sm text-slate-400 mt-3 pt-3 border-t border-slate-800/60">
+            <span className="font-semibold text-slate-300">Warranty:</span> {rfp.requirements.warranty}
           </p>
         )}
         {rfp.requirements?.additionalNotes && (
-          <p className="text-sm text-gray-600 mt-1">
-            <span className="font-medium">Notes:</span> {rfp.requirements.additionalNotes}
+          <p className="text-sm text-slate-400 mt-1">
+            <span className="font-semibold text-slate-300">Notes:</span> {rfp.requirements.additionalNotes}
           </p>
         )}
       </div>
@@ -138,10 +137,7 @@ export default function RFPDetail() {
         <div className="mb-6">
           <SendRFPPanel
             rfp={rfp}
-            onSuccess={() => {
-              setShowSendPanel(false);
-              fetchAll();
-            }}
+            onSuccess={() => { setShowSendPanel(false); fetchAll(); }}
           />
         </div>
       )}

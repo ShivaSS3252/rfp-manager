@@ -27,25 +27,24 @@ export default function ComparisonView() {
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
-      <Link to={`/rfps/${id}`} className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors">
+      <Link to={`/rfps/${id}`} className="inline-flex items-center gap-1.5 text-sm text-slate-300 hover:text-slate-200 mb-6 transition-colors group">
         <ArrowLeft className="w-4 h-4" />
         Back to RFP
       </Link>
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Compare Proposals</h1>
-        {data?.rfp && <p className="text-sm text-gray-500 mt-1">{data.rfp.title}</p>}
+      <div className="mb-6 animate-fade-in-up">
+        <h1 className="text-2xl font-bold text-white tracking-tight">Compare Proposals</h1>
+        {data?.rfp && <p className="text-sm text-slate-300 mt-1">{data.rfp.title}</p>}
       </div>
 
       {loading && (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-16 flex flex-col items-center">
-          <LoadingSpinner size="lg" />
-          <p className="mt-2 text-sm text-gray-500">Scoring proposals with AI…</p>
+        <div className="bg-slate-900/80 border border-slate-800/60 rounded-2xl p-16 flex flex-col items-center">
+          <LoadingSpinner size="lg" label="AI is scoring proposals…" />
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 text-red-700 rounded-xl p-6 text-sm">{error}</div>
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl p-5 text-sm">{error}</div>
       )}
 
       {data && !loading && (

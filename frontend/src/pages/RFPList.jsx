@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, FileText } from 'lucide-react';
+import { Plus, FileText, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
@@ -28,16 +28,16 @@ export default function RFPList() {
         action={
           <Link
             to="/rfps/new"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:from-violet-500 hover:to-violet-400 transition-all duration-200 shadow-lg shadow-violet-500/25 hover:-translate-y-0.5"
           >
             <Plus className="w-4 h-4" />
             New RFP
           </Link>
         }
       />
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-slate-900/80 border border-slate-800/60 rounded-2xl overflow-hidden">
         {loading ? (
-          <LoadingSpinner />
+          <LoadingSpinner label="Loading RFPs…" />
         ) : rfps.length === 0 ? (
           <EmptyState
             icon={FileText}
@@ -46,41 +46,44 @@ export default function RFPList() {
             action={
               <Link
                 to="/rfps/new"
-                className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:from-violet-500 hover:to-violet-400 transition-all"
               >
-                <Plus className="w-4 h-4" />
-                Create RFP
+                <Plus className="w-4 h-4" /> Create RFP
               </Link>
             }
           />
         ) : (
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Title</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Budget</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Deadline</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Created</th>
+              <tr className="border-b border-slate-800/60">
+                <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-300 uppercase tracking-widest">Title</th>
+                <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-300 uppercase tracking-widest">Status</th>
+                <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-300 uppercase tracking-widest">Budget</th>
+                <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-300 uppercase tracking-widest">Deadline</th>
+                <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-300 uppercase tracking-widest">Created</th>
+                <th />
               </tr>
             </thead>
-            <tbody>
+            <tbody className="stagger">
               {rfps.map(rfp => (
-                <tr key={rfp._id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                  <td className="px-5 py-3">
-                    <Link to={`/rfps/${rfp._id}`} className="text-sm font-medium text-gray-900 hover:text-blue-600">
+                <tr key={rfp._id} className="animate-fade-in-up group border-b border-slate-800/40 last:border-0 hover:bg-slate-800/30 transition-all duration-200">
+                  <td className="px-5 py-3.5">
+                    <Link to={`/rfps/${rfp._id}`} className="text-sm font-semibold text-slate-200 group-hover:text-violet-300 transition-colors">
                       {rfp.title}
                     </Link>
                   </td>
-                  <td className="px-5 py-3"><StatusBadge status={rfp.status} /></td>
-                  <td className="px-5 py-3 text-sm text-gray-600">
+                  <td className="px-5 py-3.5"><StatusBadge status={rfp.status} /></td>
+                  <td className="px-5 py-3.5 text-sm text-slate-400">
                     {rfp.requirements?.budget ? `$${rfp.requirements.budget.toLocaleString()}` : '—'}
                   </td>
-                  <td className="px-5 py-3 text-sm text-gray-600">
+                  <td className="px-5 py-3.5 text-sm text-slate-400">
                     {rfp.requirements?.deadline ? new Date(rfp.requirements.deadline).toLocaleDateString() : '—'}
                   </td>
-                  <td className="px-5 py-3 text-sm text-gray-500">
+                  <td className="px-5 py-3.5 text-sm text-slate-300">
                     {new Date(rfp.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-violet-400 transition-colors" />
                   </td>
                 </tr>
               ))}
